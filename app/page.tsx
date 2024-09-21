@@ -1,101 +1,123 @@
-import Image from "next/image";
+'use client'
 
-export default function Home() {
-  return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="https://nextjs.org/icons/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              app/page.tsx
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+import { useState, useEffect } from 'react';
+import ButtonAlter from './components/buttonAlter';
+import ButtonDelete from './components/buttonDelete';
+import ButtonCreate from './components/buttonCreate';
+import LoadingSpinner from './components/loadingSpinner';
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="https://nextjs.org/icons/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+interface TypeProfessor{
+  id_professor: number;
+  id_titulo: number;
+  tx_nome: string;
+  tx_sexo: string;
+  tx_estado_civil: string;
+  dt_nascimento: string;
+  tx_telefone: string;
+}
+
+export default function Home(){
+
+  const [ professor, setProfessor ] = useState<TypeProfessor[]>([]);
+  const [ spinner, setSpinner ] = useState<boolean>(true);
+  const [ buttonDelete, setButtonDelete ] = useState<boolean>(false);
+
+  useEffect( () => {
+    const getData = async() => {
+      try{
+          const response = await fetch("http://localhost:3003/professor");
+          
+          if(!response.ok)
+            throw new Error(`Response status: ${response.status}`);
+
+          
+          const data: TypeProfessor[] = await response.json();
+          
+          const dataFix = data
+            .map( (prof) => {
+              let estadoCivil: string;
+              
+              switch (prof.tx_estado_civil){
+                case 'c':
+                  estadoCivil = 'Casado(a)';
+                  break;
+                case 's':
+                  estadoCivil = 'Solteiro(a)';
+                  break;
+                case 'd':
+                  estadoCivil = 'Divorciado(a)';
+                  break;
+                default:
+                  estadoCivil = '';
+                  break;
+              }
+
+              return {
+                ...prof,
+                dt_nascimento: new Date(prof.dt_nascimento).toLocaleDateString('pt-BR'),
+                tx_estado_civil: estadoCivil
+              };
+            })
+            .sort( (a, b) => { 
+              if (a.tx_nome < b.tx_nome)  return -1;
+              if (a.tx_nome > b.tx_nome)  return 1;
+              return 0;
+            })
+          setProfessor(dataFix);
+          setSpinner(false);
+
+      } catch ( err : unknown){
+        if ( err instanceof Error )
+          console.log('Failed to fetch data: ', err.message);
+        else
+          console.log('Failed to fetch data: unknown error');
+        } 
+    } 
+    getData();
+    console.log(buttonDelete);
+  }, [buttonDelete]);
+  
+  return(
+    <div className="w-screen h-screen flex flex-col items-center">
+      <div className="w-full m-8 p-4 flex bg-gray-500 flex flex-row">
+        <div className="w-1/2 overflow-auto">
+          <h1 className="w-4/12 ml-24 text-4xl font-serif text-gray-200 tracking-widest bg-gray-900">PROFESSORES</h1>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
+        <div className="w-1/2 flex justify-end overflow-auto mr-24">
+          <ButtonCreate/>
+        </div>
+      </div>
+      <div className="flex flex-col justify-center items-center">
+      { spinner 
+        ? <LoadingSpinner/>
+        : <></>}
+        <table>
+          <thead>
+            <tr className="text-gray-300">
+              <th scope="col" className="border border-gray-400 bg-gray-900 pt-2 pb-2 pl-48 pr-48 tracking-widest">Nome</th>
+              <th scope="col" className="border border-gray-400 bg-gray-900 pt-2 pb-2 pl-16 pr-16 tracking-widest">Estado Civil</th>
+              <th scope="col" className="border border-gray-400 bg-gray-900 pt-2 pb-2 pl-16 pr-16 tracking-widest">Data Nascimento</th>
+              <th scope="col" className="border border-gray-400 bg-gray-900 pt-2 pb-2 pl-32 pr-32 tracking-widest">Telefone</th>
+              <th scope="col" className="border border-gray-400 bg-gray-900 pt-2 pb-2 pl-16 pr-16 tracking-widest">Alterar</th>
+              <th scope="col" className="border border-gray-400 bg-gray-900 pt-2 pb-2 pl-16 pr-16 tracking-widest">Excluir</th>
+            </tr>
+          </thead>
+          <tbody>
+            {professor
+              .map( (prof) => 
+                <tr key={prof.id_professor} className="text-white font-mono">
+                  <td className="p-4 border border-gray-400 bg-gray-800 hover:bg-black">{prof.tx_nome}</td>
+                  <td className="p-4 text-center border border-gray-400 bg-gray-800 hover:bg-black">{prof.tx_estado_civil}</td>
+                  <td className="p-4 text-center border border-gray-400 bg-gray-800 hover:bg-black tracking-widest">{prof.dt_nascimento}</td>
+                  <td className="p-4 text-center border border-gray-400 bg-gray-800 hover:bg-black tracking-widest">{prof.tx_telefone}</td>
+                  <td className="p-4 border border-gray-400 bg-gray-800 text-center hover:bg-black"><ButtonAlter/></td>
+                  <td className="p-4 border border-gray-400 bg-gray-800 text-center hover:bg-black">
+                    <ButtonDelete id={prof.id_professor} setProfessor={setProfessor} setButtonDelete={setButtonDelete} setSpinner={setSpinner}/>
+                  </td>
+                </tr>)}
+          </tbody>
+        </table>
+      </div>
+    </div>  
   );
 }
