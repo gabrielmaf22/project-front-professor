@@ -1,9 +1,13 @@
 import { FaEdit } from "react-icons/fa";
 
-export default function ButtonAlter(){
+interface TypeProps {
+    setButtonAlter: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+export default function ButtonAlter({ setButtonAlter } : TypeProps){
     return(
-        <button className="hover:text-amber-300">
+        <button onClick={() => setButtonAlter( (prev) => !prev)} className="hover:text-amber-300">
             <FaEdit />
         </button>
     );
-}
+}   

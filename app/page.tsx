@@ -1,10 +1,14 @@
 'use client'
 
 import { useState, useEffect } from 'react';
+
 import ButtonAlter from './components/buttonAlter';
 import ButtonDelete from './components/buttonDelete';
 import ButtonCreate from './components/buttonCreate';
+
 import LoadingSpinner from './components/loadingSpinner';
+import ModalCreate from './components/modalCreate';
+import ModalAlter from './components/modalAlter';
 
 interface TypeProfessor{
   id_professor: number;
@@ -20,7 +24,10 @@ export default function Home(){
 
   const [ professor, setProfessor ] = useState<TypeProfessor[]>([]);
   const [ spinner, setSpinner ] = useState<boolean>(true);
+
   const [ buttonDelete, setButtonDelete ] = useState<boolean>(false);
+  const [ buttonCreate, setButtonCreate ] = useState<boolean>(false);
+  const [ buttonAlter, setButtonAlter ] = useState<boolean>(false);
 
   useEffect( () => {
     const getData = async() => {
@@ -74,7 +81,6 @@ export default function Home(){
         } 
     } 
     getData();
-    console.log(buttonDelete);
   }, [buttonDelete]);
   
   return(
@@ -84,13 +90,12 @@ export default function Home(){
           <h1 className="w-4/12 ml-24 text-4xl font-serif text-gray-200 tracking-widest bg-gray-900">PROFESSORES</h1>
         </div>
         <div className="w-1/2 flex justify-end overflow-auto mr-24">
-          <ButtonCreate/>
+          <ButtonCreate setButtonCreate={setButtonCreate}/>
+          {buttonCreate && <ModalCreate setButtonCreate={setButtonCreate}/>}
         </div>
       </div>
       <div className="flex flex-col justify-center items-center">
-      { spinner 
-        ? <LoadingSpinner/>
-        : <></>}
+      { spinner && <LoadingSpinner/> }
         <table>
           <thead>
             <tr className="text-gray-300">
@@ -110,10 +115,14 @@ export default function Home(){
                   <td className="p-4 text-center border border-gray-400 bg-gray-800 hover:bg-black">{prof.tx_estado_civil}</td>
                   <td className="p-4 text-center border border-gray-400 bg-gray-800 hover:bg-black tracking-widest">{prof.dt_nascimento}</td>
                   <td className="p-4 text-center border border-gray-400 bg-gray-800 hover:bg-black tracking-widest">{prof.tx_telefone}</td>
-                  <td className="p-4 border border-gray-400 bg-gray-800 text-center hover:bg-black"><ButtonAlter/></td>
                   <td className="p-4 border border-gray-400 bg-gray-800 text-center hover:bg-black">
-                    <ButtonDelete id={prof.id_professor} setProfessor={setProfessor} setButtonDelete={setButtonDelete} setSpinner={setSpinner}/>
+                    <ButtonAlter setButtonAlter={setButtonAlter}/>
                   </td>
+                  <td className="p-4 border border-gray-400 bg-gray-800 text-center hover:bg-black">
+                    <ButtonDelete id={prof.id_professor} setProfessor={setProfessor} 
+                                  setButtonDelete={setButtonDelete} setSpinner={setSpinner}/>
+                  </td>
+                  {buttonAlter && <ModalAlter setButtonAlter={setButtonAlter} prof={prof} />}
                 </tr>)}
           </tbody>
         </table>
