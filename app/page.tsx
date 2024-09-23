@@ -23,6 +23,7 @@ interface TypeProfessor{
 export default function Home(){
 
   const [ professor, setProfessor ] = useState<TypeProfessor[]>([]);
+  const [ eachProf, setEachProf ] = useState<TypeProfessor | undefined>(undefined);
   const [ spinner, setSpinner ] = useState<boolean>(true);
 
   const [ buttonDelete, setButtonDelete ] = useState<boolean>(false);
@@ -116,13 +117,13 @@ export default function Home(){
                   <td className="p-4 text-center border border-gray-400 bg-gray-800 hover:bg-black tracking-widest">{prof.dt_nascimento}</td>
                   <td className="p-4 text-center border border-gray-400 bg-gray-800 hover:bg-black tracking-widest">{prof.tx_telefone}</td>
                   <td className="p-4 border border-gray-400 bg-gray-800 text-center hover:bg-black">
-                    <ButtonAlter setButtonAlter={setButtonAlter}/>
+                    <ButtonAlter prof={prof} setEachProf={setEachProf} setButtonAlter={setButtonAlter}/>
                   </td>
                   <td className="p-4 border border-gray-400 bg-gray-800 text-center hover:bg-black">
                     <ButtonDelete id={prof.id_professor} setProfessor={setProfessor} 
                                   setButtonDelete={setButtonDelete} setSpinner={setSpinner}/>
                   </td>
-                  {buttonAlter && <ModalAlter setButtonAlter={setButtonAlter} prof={prof} />}
+                  {buttonAlter && <ModalAlter setButtonAlter={setButtonAlter} eachProf={eachProf} setEachProf={setEachProf} />}
                 </tr>)}
           </tbody>
         </table>

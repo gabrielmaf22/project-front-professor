@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, ChangeEvent } from 'react';
 import { RiSendPlane2Fill } from "react-icons/ri";
 import { RiDeleteBin5Line } from "react-icons/ri";
 import { ImExit } from "react-icons/im";
@@ -18,13 +18,30 @@ interface TypeProfessor{
 
 interface TypeProps {
     setButtonAlter: React.Dispatch<React.SetStateAction<boolean>>;
-    prof: TypeProfessor;
-
+    eachProf: TypeProfessor | undefined;
+    setEachProf: React.Dispatch<React.SetStateAction<TypeProfessor | undefined>>;
 }
 
-export default function ModalAlter({ setButtonAlter, prof } : TypeProps){
+export default function ModalAlter({ setButtonAlter, eachProf, setEachProf } : TypeProps){
 
     const [date, setDate] = useState<Date | null>(null);
+
+    function handleChangeNome(e : ChangeEvent<HTMLInputElement>){
+        setEachProf((prev) => ((prev === undefined) ? prev : ({...prev, tx_nome: e.target.value,})));
+    }
+
+    function handleChangeNascimento(date : Date | null){
+        setEachProf((prev) => ((prev === undefined) ? prev : ({...prev, dt_nascimento: (
+            (date === null) 
+            ? ""
+            : new Date(date).toLocaleDateString('pt-BR')),})));
+        setDate(date);
+    }
+
+    function handleChangeTelefone(e : ChangeEvent<HTMLInputElement>){
+        setEachProf((prev) => ((prev === undefined) ? prev : ({...prev, tx_telefone: e.target.value,})));
+    }   
+ 
 
     return(
         <>
@@ -34,7 +51,11 @@ export default function ModalAlter({ setButtonAlter, prof } : TypeProps){
                     <form className="w-full h-full flex flex-row pl-8 pt-8">
                         <div className="w-10/12 flex flex-col">
                             <label className="mt-8 font-mono">Nome</label>
-                            <input type="text" name="nome" placeholder="Digite seu nome"
+                            <input type="text" value={(eachProf === undefined) ? "" : eachProf.tx_nome}
+                                    onChange={(e) => handleChangeNome(e)}
+
+
+                                    name="nome" placeholder="Digite seu nome"
                                     className="w-10/12 text-black pl-2 pr-2 rounded-lg bg-gray-300 focus:outline-none"/>
                             <span className="mt-12 font-mono">Sexo</span> 
                             <div className="w-10/12 flex flex-row ml-4 mt-2">
@@ -66,13 +87,16 @@ export default function ModalAlter({ setButtonAlter, prof } : TypeProps){
                             <div className="text-black">
                                 <DatePicker
                                     selected={date}
-                                    onChange={(date: Date | null) => setDate(date)}
+                                    value={(eachProf === undefined) ? "" : eachProf.dt_nascimento}
+                                    onChange={(date: Date | null) => handleChangeNascimento(date)}
                                     className="w-[350px] text-black bg-gray-300 rounded-lg pl-2 font-mono"
                                     dateFormat="dd/MM/yyyy"
                                 />
                             </div>
                             <label className="mt-12 font-mono">Telefone</label>
-                            <input type="text" name="telefone" placeholder="Digite seu telefone"
+                            <input type="text" value={(eachProf === undefined) ? "" : eachProf.tx_telefone}
+                                    onChange={(e) => handleChangeTelefone(e)}
+                                    name="telefone" placeholder="Digite seu telefone"
                                     className="w-10/12 text-black pl-2 pr-2 rounded-lg bg-gray-300 focus:outline-none"/>
                         </div>
                         <div className="w-full flex flex-col items-center justify-around border-l-2 border-gray-300">

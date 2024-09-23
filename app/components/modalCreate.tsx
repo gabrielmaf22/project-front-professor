@@ -55,7 +55,7 @@ export default function ModalCreate({ setButtonCreate } : TypeProps){
                                 <DatePicker
                                     selected={date}
                                     onChange={(date: Date | null) => setDate(date)}
-                                    className="w-[330px] text-black bg-gray-300 rounded-lg pl-2 font-mono"
+                                    className="w-[300px] text-black bg-gray-300 rounded-lg pl-2 font-mono"
                                     dateFormat="dd/MM/yyyy"
                                 />
                             </div>

@@ -1,12 +1,31 @@
 import { FaEdit } from "react-icons/fa";
 
-interface TypeProps {
-    setButtonAlter: React.Dispatch<React.SetStateAction<boolean>>;
+
+interface TypeProfessor{
+    id_professor: number;
+    id_titulo: number;
+    tx_nome: string;
+    tx_sexo: string;
+    tx_estado_civil: string;
+    dt_nascimento: string;
+    tx_telefone: string;
 }
 
-export default function ButtonAlter({ setButtonAlter } : TypeProps){
+interface TypeProps {
+    setButtonAlter: React.Dispatch<React.SetStateAction<boolean>>;
+    setEachProf: React.Dispatch<React.SetStateAction<TypeProfessor | undefined>>;
+    prof: TypeProfessor;
+}
+
+export default function ButtonAlter({ setButtonAlter, setEachProf, prof } : TypeProps){
+    
+    function handleClick(){
+        setButtonAlter( (prev) => !prev );
+        setEachProf(prof);
+    }
+ 
     return(
-        <button onClick={() => setButtonAlter( (prev) => !prev)} className="hover:text-amber-300">
+        <button onClick={handleClick} className="hover:text-amber-300">
             <FaEdit />
         </button>
     );
