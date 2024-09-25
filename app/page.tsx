@@ -82,7 +82,7 @@ export default function Home(){
         } 
     } 
     getData();
-  }, [buttonDelete]);
+  }, [buttonDelete, buttonCreate, buttonAlter]);
   
   return(
     <div className="w-screen h-screen flex flex-col items-center">
@@ -123,10 +123,10 @@ export default function Home(){
                     <ButtonDelete id={prof.id_professor} setProfessor={setProfessor} 
                                   setButtonDelete={setButtonDelete} setSpinner={setSpinner}/>
                   </td>
-                  {buttonAlter && <ModalAlter setButtonAlter={setButtonAlter} eachProf={eachProf} setEachProf={setEachProf} />}
                 </tr>)}
           </tbody>
         </table>
+        {buttonAlter && <ModalAlter setButtonAlter={setButtonAlter} eachProf={eachProf} setEachProf={setEachProf} />}
       </div>
     </div>  
   );

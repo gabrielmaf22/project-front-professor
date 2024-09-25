@@ -45,7 +45,7 @@ export default function ModalAlter({ setButtonAlter, eachProf, setEachProf } : T
 
     return(
         <>
-            <div className="bg-black bg-opacity-10 w-screen h-screen z-0 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2" onClick={() => setButtonAlter( (prev) => !prev)}/>
+            <div className="bg-black bg-opacity-50 w-screen h-screen z-0 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2" onClick={() => setButtonAlter( (prev) => !prev)}/>
             <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
                 <div className="w-[800px] h-[600px] bg-gray-900 text-white z-10 rounded-[16px]">
                     <form className="w-full h-full flex flex-row pl-8 pt-8">
@@ -53,8 +53,6 @@ export default function ModalAlter({ setButtonAlter, eachProf, setEachProf } : T
                             <label className="mt-8 font-mono">Nome</label>
                             <input type="text" value={(eachProf === undefined) ? "" : eachProf.tx_nome}
                                     onChange={(e) => handleChangeNome(e)}
-
-
                                     name="nome" placeholder="Digite seu nome"
                                     className="w-10/12 text-black pl-2 pr-2 rounded-lg bg-gray-300 focus:outline-none"/>
                             <span className="mt-12 font-mono">Sexo</span> 
@@ -89,7 +87,7 @@ export default function ModalAlter({ setButtonAlter, eachProf, setEachProf } : T
                                     selected={date}
                                     value={(eachProf === undefined) ? "" : eachProf.dt_nascimento}
                                     onChange={(date: Date | null) => handleChangeNascimento(date)}
-                                    className="w-[350px] text-black bg-gray-300 rounded-lg pl-2 font-mono"
+                                    className="w-[300px] text-black bg-gray-300 rounded-lg pl-2 font-mono"
                                     dateFormat="dd/MM/yyyy"
                                 />
                             </div>
@@ -110,7 +108,11 @@ export default function ModalAlter({ setButtonAlter, eachProf, setEachProf } : T
                                 <span className="ml-8 font-mono">Deletar</span>
                             </button>                   
 
-                            <button className="w-5/12 flex flex-row items-center rounded-lg p-2 bg-gray-700 border-2 border-gray-300">
+                            <button onClick={(e) => {
+                                    e.preventDefault();
+                                    setButtonAlter( (prev) => !prev);
+                                }} 
+                                className="w-5/12 flex flex-row items-center rounded-lg p-2 bg-gray-700 border-2 border-gray-300">
                                 <ImExit />
                                 <span className="ml-8 font-mono">Retornar</span>
                             </button>          
