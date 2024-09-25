@@ -126,7 +126,8 @@ export default function Home(){
                 </tr>)}
           </tbody>
         </table>
-        {buttonAlter && <ModalAlter setButtonAlter={setButtonAlter} eachProf={eachProf} setEachProf={setEachProf} />}
+        {buttonAlter && <ModalAlter setButtonAlter={setButtonAlter} eachProf={eachProf} setEachProf={setEachProf}
+                                    setProfessor={setProfessor} setButtonDelete={setButtonDelete} setSpinner={setSpinner} />}
       </div>
     </div>  
   );

@@ -17,7 +17,7 @@ interface TypeProps{
     setSpinner: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-export default function ButtonDelete({ id, setProfessor, setButtonDelete, setSpinner } : TypeProps){
+export default function ButtonDelete({ id, setProfessor, setButtonDelete, setSpinner} : TypeProps){
 
     function handleClick(){
 
